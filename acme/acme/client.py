@@ -165,6 +165,8 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
     def _authzr_from_response(self, response, identifier,
                               uri=None, new_cert_uri=None):
         # pylint: disable=no-self-use
+
+        
         if new_cert_uri is None:
             try:
                 new_cert_uri = response.links['next']['url']
@@ -388,7 +390,7 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
         now = datetime.datetime.now()
         if when > now:
             seconds = (when - now).seconds
-            logger.debug('Sleeping for %d seconds', seconds)
+            logger.debug( 'Sleeping for %d seconds', seconds)
             time.sleep(seconds)
 
     def _get_cert(self, uri):
