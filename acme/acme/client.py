@@ -358,13 +358,7 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
 
         while waiting and max_attempts:
             max_attempts -= 1
-            # find the smallest Retry-After, and sleep if necessary
-            when, authzr = heapq.heappop(waiting)
-            now = datetime.datetime.now()
-            if when > now:
-                seconds = (when - now).seconds
-                logger.debug('Sleeping for %d seconds', seconds)
-                time.sleep(seconds)
+            self._find_smallest_and_sleep(waiting)
 
             # Note that we poll with the latest updated Authorization
             # URI, which might have a different URI than initial one
@@ -384,6 +378,18 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
 
         updated_authzrs = tuple(updated[authzr] for authzr in authzrs)
         return self.request_issuance(csr, updated_authzrs), updated_authzrs
+
+    def _find_smallest_and_sleep(waiting):
+        """Finds the smallest Retry-After, sleeping if necessary
+
+        :param int: wait time from priority queue
+        """
+        when, authzr = heapq.heappop(waiting)
+        now = datetime.datetime.now()
+        if when > now:
+            seconds = (when - now).seconds
+            logger.debug('Sleeping for %d seconds', seconds)
+            time.sleep(seconds)
 
     def _get_cert(self, uri):
         """Returns certificate from URI.
