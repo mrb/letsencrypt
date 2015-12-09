@@ -6,8 +6,11 @@ engines:
     enabled: true
   radon:
     enabled: true
+    config:
+      threshold: "c"
 ratings:
   paths:
   - "**.py"
 exclude_paths:
-- tests/**/*
+- "letsencrypt/tests/**/*"
+- "tests/**/*"
